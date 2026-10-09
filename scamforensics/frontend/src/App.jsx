@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { api } from './api'
 import UploadPanel from './components/UploadPanel'
-import GraphView from './components/GraphView'
 import RiskPanel from './components/RiskPanel'
 import Timeline from './components/Timeline'
 import ReportModal from './components/ReportModal'
@@ -96,8 +95,7 @@ export default function App() {
           <div><span>Campaign link</span><b>{analysis ? `${analysis.campaign_confidence}% confidence` : 'No evidence yet'}</b></div>
         </div>
 
-        <div className="dossier-body">
-          <GraphView graph={result?.graph} />
+        <div className="dossier-body no-graph">
           <RiskPanel analysis={analysis} />
         </div>
 
