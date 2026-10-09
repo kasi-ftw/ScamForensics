@@ -1,0 +1,3 @@
+QR payment request — 10:27
+Scan QR to complete required KYC validation: upi://pay?pa=fraudtest@ybl&pn=KYC%20Desk&am=25000
+Open https://sbi-kyc-verify-example.com/pay after scanning. Call 98765 43210 for support.

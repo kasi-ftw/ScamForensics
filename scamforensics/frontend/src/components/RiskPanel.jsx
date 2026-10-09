@@ -1,0 +1,4 @@
+export default function RiskPanel({ analysis }) {
+  if (!analysis) return <aside className="panel risk-panel"><h2>Risk analysis</h2><p className="muted">Add evidence, then investigate.</p></aside>
+  return <aside className="panel risk-panel"><h2>Risk analysis</h2><div className={`risk ${analysis.risk.toLowerCase()}`}>{analysis.risk}<b>{analysis.risk_score}/100</b></div><h3>{analysis.scam_type}</h3><div className="stats"><span><b>{analysis.evidence_count}</b>evidence</span><span><b>{analysis.connected_evidence}/{analysis.evidence_count}</b>connected</span><span><b>{analysis.campaign_confidence}%</b>confidence</span></div>{analysis.impersonated_org && <p className="org">Impersonated: {analysis.impersonated_org}</p>}<h4>Indicators</h4><ul>{analysis.indicators.map(i => <li key={i.label}>{i.label}<b>+{i.points}</b></li>)}</ul></aside>
+}

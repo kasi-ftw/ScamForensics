@@ -1,0 +1,2 @@
+Payment receipt — 10:29
+Rs 25,000 payment requested to fraudtest@ybl for SBI KYC activation. Reference link: https://sbi-kyc-verify-example.com/pay. Support number 98765 43210.
