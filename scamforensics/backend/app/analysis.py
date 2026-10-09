@@ -29,7 +29,8 @@ def analyze(evidence, entities, graph):
             indicators.append({"label": title, "points": points})
     urls = [v for t, v in values if t == "url"]
     impersonated = next((v for t, v in values if t == "organisation"), None)
-    add(25, "Look-alike banking domain", any(x in d and any(w in d for w in ("kyc", "verify", "secure", "login")) for d in urls))
+    bank_match = (impersonated.lower() if impersonated else "")
+    add(25, "Look-alike banking domain", bool(bank_match) and any(bank_match in d and any(w in d for w in ("kyc", "verify", "secure", "login")) for d in urls))
     add(15, "KYC lure", "kyc" in text)
     add(10, "Urgency language", any(w in text for w in ("urgent", "blocked", "suspended", "immediately")))
     add(15, "Payment request", any(t == "amount" for t, _ in values) or "payment" in text)
