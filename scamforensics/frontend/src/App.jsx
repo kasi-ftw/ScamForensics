@@ -4,11 +4,13 @@ import UploadPanel from './components/UploadPanel'
 import RiskPanel from './components/RiskPanel'
 import Timeline from './components/Timeline'
 import ReportModal from './components/ReportModal'
+import EvidenceDetailModal from './components/EvidenceDetailModal'
 
 export default function App() {
   const [evidence, setEvidence] = useState([])
   const [result, setResult] = useState(null)
   const [report, setReport] = useState(null)
+  const [selectedEvidence, setSelectedEvidence] = useState(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
 
@@ -70,7 +72,7 @@ export default function App() {
           </div>
         </header>
 
-        <UploadPanel evidence={evidence} onUpload={upload} onDemo={() => work(api.demo)} onSafeDemo={() => work(api.safeDemo)} onClear={() => work(api.clear)} busy={busy} />
+        <UploadPanel evidence={evidence} onUpload={upload} onDemo={() => work(api.demo)} onSafeDemo={() => work(api.safeDemo)} onClear={() => work(api.clear)} onSelect={setSelectedEvidence} busy={busy} />
 
         <div className="case-index" aria-label={`Risk score ${score} out of 100`}>
           <span>CASE RISK INDEX</span>
@@ -106,5 +108,6 @@ export default function App() {
       </section>
     </div>
     <ReportModal text={report} onClose={() => setReport(null)} pdfUrl={api.pdf()} />
+    <EvidenceDetailModal evidence={selectedEvidence} onClose={() => setSelectedEvidence(null)} />
   </main>
 }

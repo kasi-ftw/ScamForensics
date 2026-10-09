@@ -1,0 +1,80 @@
+.evidence-card {
+  width: 100%;
+  color: inherit;
+  text-align: left;
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.evidence-card:hover,
+.evidence-card:focus-visible {
+  padding-inline: 7px;
+  background: rgba(2, 64, 84, .22);
+  outline: 1px solid rgba(231, 255, 255, .7);
+  outline-offset: -1px;
+}
+
+.evidence-backdrop { z-index: 30; }
+
+.evidence-modal {
+  width: min(680px, 100%);
+  max-height: 84vh;
+  overflow: auto;
+  border: 1px solid #93dce0;
+  background: #07191d;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .5);
+  color: #ecffff;
+}
+
+.evidence-modal-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 22px;
+  border-bottom: 1px solid rgba(160, 235, 235, .28);
+}
+
+.evidence-modal-header span,
+.evidence-modal h3,
+.evidence-metadata dt {
+  color: #91cdd1;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.evidence-modal h2 { margin-top: 8px; font-size: 20px; overflow-wrap: anywhere; }
+.evidence-modal-header button { padding: 0; color: #eaffff; border: 0; background: transparent; font-size: 21px; }
+
+.evidence-metadata {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  margin: 0;
+  background: rgba(160, 235, 235, .22);
+}
+
+.evidence-metadata div { min-width: 0; padding: 13px 16px; background: #0b2227; }
+.evidence-metadata dt { margin-bottom: 5px; }
+.evidence-metadata dd { margin: 0; overflow: hidden; color: #f1ffff; font-size: 12px; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap; }
+
+.evidence-text,
+.evidence-entities { padding: 20px 22px; }
+.evidence-text h3,
+.evidence-entities h3 { margin: 0 0 9px; }
+.evidence-text pre { min-height: 145px; margin: 0; padding: 14px; overflow: auto; background: #02090b; color: #d8f4f3; white-space: pre-wrap; font: 12px/1.55 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.evidence-entities { border-top: 1px solid rgba(160, 235, 235, .2); }
+.evidence-entities > div { display: flex; flex-wrap: wrap; gap: 7px; }
+.evidence-entities span { padding: 5px 7px; color: #ddffff; background: #10404a; font-size: 11px; }
+.evidence-entities p { margin: 0; color: #abcccd; font-size: 12px; }
+
+@media (max-width: 520px) {
+  .evidence-modal-header { padding: 18px; }
+  .evidence-metadata { grid-template-columns: 1fr; }
+  .evidence-text, .evidence-entities { padding: 17px; }
+}

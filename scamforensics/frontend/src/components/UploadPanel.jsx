@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 
-export default function UploadPanel({ evidence, onUpload, onDemo, onSafeDemo, onClear, busy }) {
+export default function UploadPanel({ evidence, onUpload, onDemo, onSafeDemo, onClear, onSelect, busy }) {
   const input = useRef(null)
   const [text, setText] = useState('')
   const send = files => onUpload(files, text).then(() => setText(''))
@@ -24,11 +24,11 @@ export default function UploadPanel({ evidence, onUpload, onDemo, onSafeDemo, on
       <button onClick={onClear} disabled={busy}>Clear</button>
     </div>
     <div className="evidence-list">
-      {evidence.length ? evidence.map(item => <article className="evidence-card" key={item.id}>
+      {evidence.length ? evidence.map(item => <button className="evidence-card" type="button" key={item.id} onClick={() => onSelect(item)}>
         <div><b>{item.filename}</b><span>{item.kind}</span></div>
         <small>{item.timestamp || 'Time not set'}</small>
         <section>{item.entities?.filter(entity => entity.type !== 'keyword').slice(0, 3).map(entity => <i key={entity.id}>{entity.value}</i>)}</section>
-      </article>) : <p className="empty-evidence">Your uploaded artefacts will appear here.</p>}
+      </button>) : <p className="empty-evidence">Your uploaded artefacts will appear here.</p>}
     </div>
   </section>
 }
