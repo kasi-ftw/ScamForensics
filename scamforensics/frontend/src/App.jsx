@@ -70,7 +70,7 @@ export default function App() {
           </div>
         </header>
 
-        <UploadPanel evidence={evidence} onUpload={upload} onDemo={() => work(api.demo)} onClear={() => work(api.clear)} busy={busy} />
+        <UploadPanel evidence={evidence} onUpload={upload} onDemo={() => work(api.demo)} onSafeDemo={() => work(api.safeDemo)} onClear={() => work(api.clear)} busy={busy} />
 
         <div className="case-index" aria-label={`Risk score ${score} out of 100`}>
           <span>CASE RISK INDEX</span>

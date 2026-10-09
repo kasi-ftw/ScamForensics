@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 
-export default function UploadPanel({ evidence, onUpload, onDemo, onClear, busy }) {
+export default function UploadPanel({ evidence, onUpload, onDemo, onSafeDemo, onClear, busy }) {
   const input = useRef(null)
   const [text, setText] = useState('')
   const send = files => onUpload(files, text).then(() => setText(''))
@@ -20,6 +20,7 @@ export default function UploadPanel({ evidence, onUpload, onDemo, onClear, busy 
     </div>
     <div className="case-actions">
       <button onClick={onDemo} disabled={busy}>Load demo</button>
+      <button onClick={onSafeDemo} disabled={busy}>Load safe demo</button>
       <button onClick={onClear} disabled={busy}>Clear</button>
     </div>
     <div className="evidence-list">

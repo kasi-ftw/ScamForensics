@@ -42,8 +42,8 @@ def analyze(evidence, entities, graph):
     risk = "HIGH" if score >= 65 else "MEDIUM" if score >= 35 else "LOW"
     connected = len(graph["largest_cluster"])
     counts = dict(Counter(t for t, _ in values))
-    confidence = round((connected / len(evidence) * 70 + min(score, 30)) if evidence else 0)
-    scam_type = "Fake bank KYC / payment scam" if "kyc" in text or impersonated else "Suspected digital scam"
+    confidence = round((connected / len(evidence) * 70 + min(score, 30)) if evidence and score else 0)
+    scam_type = "No scam indicators detected" if score == 0 else ("Fake bank KYC / payment scam" if "kyc" in text or impersonated else "Suspected digital scam")
     fallback = f"{len(evidence)} artefacts were reviewed. {connected} are connected by shared identifiers; the combined indicators produce a {risk} risk assessment."
     narrative = _llm_narrative(fallback, score, connected, len(evidence))
     return {"scam_type": scam_type, "risk": risk, "risk_score": score, "campaign_confidence": min(confidence, 100), "impersonated_org": impersonated, "evidence_count": len(evidence), "connected_evidence": connected, "indicators": indicators, "entity_counts": counts, "narrative": narrative}

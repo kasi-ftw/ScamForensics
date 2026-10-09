@@ -141,12 +141,21 @@ def report_pdf():
     return StreamingResponse(pdf_report(report_data()), media_type="application/pdf", headers={"Content-Disposition": "attachment; filename=ScamForensics-report.pdf"})
 
 
-@app.post("/demo/load")
-def load_demo():
-    demo_dir = Path(__file__).resolve().parents[2] / "demo" / "evidence"
+def load_demo_case(directory: str, case_id: str):
+    demo_dir = Path(__file__).resolve().parents[2] / "demo" / directory
     if not demo_dir.exists():
         raise HTTPException(500, "Demo evidence directory is missing")
     with db.connect() as conn:
         conn.execute("DELETE FROM evidence")
-    created = [add_evidence(file.name, file.read_text(encoding="utf-8"), case_id="CASE-SBI-DEMO") for file in sorted(demo_dir.glob("*.txt"))]
+    created = [add_evidence(file.name, file.read_text(encoding="utf-8"), case_id=case_id) for file in sorted(demo_dir.glob("*.txt"))]
     return {"loaded": len(created), "evidence": created}
+
+
+@app.post("/demo/load")
+def load_demo():
+    return load_demo_case("evidence", "CASE-SBI-DEMO")
+
+
+@app.post("/demo/load-safe")
+def load_safe_demo():
+    return load_demo_case("safe_evidence", "CASE-SAFE-DEMO")

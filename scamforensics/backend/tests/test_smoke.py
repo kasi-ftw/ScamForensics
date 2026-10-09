@@ -19,3 +19,13 @@ def test_upload_and_analyze():
         output = client.post("/analyze").json()
         assert output["analysis"]["risk_score"] >= 65
         assert output["graph"]["nodes"]
+
+
+def test_safe_demo_is_low_risk():
+    with TestClient(app) as client:
+        response = client.post("/demo/load-safe")
+        assert response.status_code == 200
+        output = client.post("/analyze").json()
+        assert output["analysis"]["risk"] == "LOW"
+        assert output["analysis"]["risk_score"] == 0
+        assert output["analysis"]["scam_type"] == "No scam indicators detected"

@@ -8,6 +8,7 @@ export const api = {
   analyze: () => request('/analyze', { method: 'POST' }).then(r => r.json()),
   upload: form => request('/upload', { method: 'POST', body: form }).then(r => r.json()),
   demo: () => request('/demo/load', { method: 'POST' }).then(r => r.json()),
+  safeDemo: () => request('/demo/load-safe', { method: 'POST' }).then(r => r.json()),
   clear: () => request('/evidence', { method: 'DELETE' }),
   timestamp: (id, timestamp) => request(`/evidence/${id}/timestamp`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ timestamp }) }),
   report: () => request('/report').then(r => r.text()),
