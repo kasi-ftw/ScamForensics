@@ -4,15 +4,30 @@ export default function UploadPanel({ evidence, onUpload, onDemo, onClear, busy 
   const input = useRef(null)
   const [text, setText] = useState('')
   const send = files => onUpload(files, text).then(() => setText(''))
-  return <aside className="panel upload-panel">
-    <h2>Evidence intake</h2>
-    <div className="dropzone" onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); send(e.dataTransfer.files) }} onClick={() => input.current.click()}>
-      <input ref={input} type="file" multiple accept="image/*,.txt" onChange={e => send(e.target.files)} />
-      <span>Drop images or .txt files</span><small>OCR runs locally when available</small>
+
+  return <section className="upload-panel">
+    <div className="upload-heading">
+      <span>01 / INPUT</span>
+      <p>Drop screenshots, text files, or paste a message below.</p>
     </div>
-    <textarea value={text} onChange={e => setText(e.target.value)} placeholder="Paste a URL, phone number, UPI ID or message…" />
-    <button className="primary wide" disabled={busy || !text.trim()} onClick={() => send([])}>Add pasted evidence</button>
-    <div className="actions"><button onClick={onDemo} disabled={busy}>Load demo case</button><button onClick={onClear} disabled={busy}>Clear</button></div>
-    <div className="evidence-list">{evidence.map(item => <article className="evidence-card" key={item.id}><div><b>{item.filename}</b><span>{item.kind}</span></div><small>{item.timestamp || 'Time not set'}</small><section>{item.entities?.filter(e => e.type !== 'keyword').slice(0, 5).map(e => <i key={e.id}>{e.value}</i>)}</section></article>)}</div>
-  </aside>
+    <div className="dropzone" onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); send(event.dataTransfer.files) }} onClick={() => input.current.click()}>
+      <input ref={input} type="file" multiple accept="image/*,.txt" onChange={event => send(event.target.files)} />
+      <b>+</b><span>ADD EVIDENCE</span><small>Images and .txt files</small>
+    </div>
+    <div className="text-intake">
+      <textarea value={text} onChange={event => setText(event.target.value)} placeholder="Paste a message, URL, phone number or UPI ID..." />
+      <button className="add-text" disabled={busy || !text.trim()} onClick={() => send([])}>Add text</button>
+    </div>
+    <div className="case-actions">
+      <button onClick={onDemo} disabled={busy}>Load demo</button>
+      <button onClick={onClear} disabled={busy}>Clear</button>
+    </div>
+    <div className="evidence-list">
+      {evidence.length ? evidence.map(item => <article className="evidence-card" key={item.id}>
+        <div><b>{item.filename}</b><span>{item.kind}</span></div>
+        <small>{item.timestamp || 'Time not set'}</small>
+        <section>{item.entities?.filter(entity => entity.type !== 'keyword').slice(0, 3).map(entity => <i key={entity.id}>{entity.value}</i>)}</section>
+      </article>) : <p className="empty-evidence">Your uploaded artefacts will appear here.</p>}
+    </div>
+  </section>
 }

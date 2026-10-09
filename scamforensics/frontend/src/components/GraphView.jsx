@@ -1,9 +1,18 @@
 import ReactFlow, { Background, Controls, MarkerType } from 'reactflow'
 import 'reactflow/dist/style.css'
 
-const colours = { phone: '#fb7185', url: '#22d3ee', upi: '#fbbf24', email: '#a78bfa', organisation: '#34d399', amount: '#fb923c', qr: '#f472b6' }
+const colours = { phone: '#83e7ef', url: '#f4c771', upi: '#9cd988', email: '#d3a6ff', organisation: '#e9e9e9', amount: '#ff9f80', qr: '#79b8ff' }
+
 export default function GraphView({ graph }) {
-  const nodes = (graph?.nodes || []).map(node => ({ ...node, data: { label: <div className={`node ${node.type === 'evidence' ? 'evidence-node' : ''}`}><small>{node.type === 'evidence' ? node.kind : node.entity_type}</small><b>{node.label}</b>{node.shared && <em>SHARED</em>}</div>, }, style: node.type === 'entity' ? { borderColor: colours[node.entity_type] || '#64748b' } : {} }))
-  const edges = (graph?.edges || []).map(edge => ({ ...edge, markerEnd: { type: MarkerType.ArrowClosed }, style: { stroke: edge.shared ? '#ef4444' : '#475569', strokeWidth: edge.shared ? 2 : 1 } }))
-  return <main className="graph-wrap"><div className="section-title"><h2>Investigation graph</h2><span>{graph?.shared_entities?.length || 0} shared identifiers</span></div><ReactFlow nodes={nodes} edges={edges} fitView proOptions={{ hideAttribution: true }}><Background color="#25334a" gap={18}/><Controls /></ReactFlow></main>
+  const nodes = (graph?.nodes || []).map(node => ({
+    ...node,
+    data: { label: <div className={`node ${node.type === 'evidence' ? 'evidence-node' : ''}`}><small>{node.type === 'evidence' ? node.kind : node.entity_type}</small><b>{node.label}</b>{node.shared && <em>LINKED</em>}</div> },
+    style: node.type === 'entity' ? { borderColor: colours[node.entity_type] || '#6f7780' } : {},
+  }))
+  const edges = (graph?.edges || []).map(edge => ({ ...edge, markerEnd: { type: MarkerType.ArrowClosed }, style: { stroke: edge.shared ? '#77d9e3' : '#50555b', strokeWidth: edge.shared ? 2 : 1 } }))
+
+  return <section className="graph-wrap">
+    <div className="graph-title"><span>02 / CORRELATION MAP</span><b>{graph?.shared_entities?.length || 0} shared pivots</b></div>
+    <ReactFlow nodes={nodes} edges={edges} fitView proOptions={{ hideAttribution: true }}><Background color="#30343a" gap={22} size={1} /><Controls /></ReactFlow>
+  </section>
 }
