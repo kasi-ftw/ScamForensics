@@ -1,7 +1,10 @@
 import os
+import re
 import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
+
+from .high_risk_domains import CYBERTRACE_2026_HIGH_RISK_DOMAINS
 
 DB_PATH = Path(os.getenv("SCAMFORENSICS_DB", Path(__file__).resolve().parents[1] / "scamforensics.db"))
 
@@ -41,7 +44,16 @@ def init_db():
               FOREIGN KEY (evidence_id) REFERENCES evidence(id) ON DELETE CASCADE
             );
             CREATE INDEX IF NOT EXISTS idx_entities_value ON entities(type, value);
+            CREATE TABLE IF NOT EXISTS high_risk_domains (
+              domain TEXT PRIMARY KEY,
+              source TEXT NOT NULL,
+              added_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );
             """
+        )
+        conn.executemany(
+            "INSERT OR IGNORE INTO high_risk_domains(domain, source) VALUES (?, ?)",
+            [(domain, "Cybertrace 2026 list (user-provided)") for domain in CYBERTRACE_2026_HIGH_RISK_DOMAINS],
         )
 
 
@@ -54,3 +66,11 @@ def row(sql, params=()):
     with connect() as conn:
         result = conn.execute(sql, params).fetchone()
         return dict(result) if result else None
+
+
+def high_risk_domain_matches(text: str) -> list[str]:
+    """Return blocklist domains found as complete host names in uploaded evidence."""
+    with connect() as conn:
+        domains = [item[0] for item in conn.execute("SELECT domain FROM high_risk_domains")]
+    lowered = text.lower()
+    return [domain for domain in domains if re.search(rf"(?<![a-z0-9.-])(?:www\\.)?{re.escape(domain)}(?![a-z0-9.-])", lowered)]

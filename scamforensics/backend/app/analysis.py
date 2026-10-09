@@ -28,9 +28,11 @@ def analyze(evidence, entities, graph):
             score += points
             indicators.append({"label": title, "points": points})
     urls = [v for t, v in values if t == "url"]
+    listed_high_risk_domains = [v for t, v in values if t == "high_risk_domain"]
     impersonated = next((v for t, v in values if t == "organisation"), None)
     bank_match = (impersonated.lower() if impersonated else "")
     add(25, "Look-alike banking domain", bool(bank_match) and any(bank_match in d and any(w in d for w in ("kyc", "verify", "secure", "login")) for d in urls))
+    add(35, "Domain on high-risk domain list", bool(listed_high_risk_domains))
     add(15, "KYC lure", "kyc" in text)
     add(10, "Urgency language", any(w in text for w in ("urgent", "blocked", "suspended", "immediately")))
     add(15, "Payment request", any(t == "amount" for t, _ in values) or "payment" in text)
@@ -43,7 +45,7 @@ def analyze(evidence, entities, graph):
     connected = len(graph["largest_cluster"])
     counts = dict(Counter(t for t, _ in values))
     confidence = round((connected / len(evidence) * 70 + min(score, 30)) if evidence and score else 0)
-    scam_type = "No scam indicators detected" if score == 0 else ("Fake bank KYC / payment scam" if "kyc" in text or impersonated else "Suspected digital scam")
+    scam_type = "No scam indicators detected" if score == 0 else ("Known high-risk domain" if listed_high_risk_domains else ("Fake bank KYC / payment scam" if "kyc" in text or impersonated else "Suspected digital scam"))
     fallback = f"{len(evidence)} artefacts were reviewed. {connected} are connected by shared identifiers; the combined indicators produce a {risk} risk assessment."
     narrative = _llm_narrative(fallback, score, connected, len(evidence))
     return {"scam_type": scam_type, "risk": risk, "risk_score": score, "campaign_confidence": min(confidence, 100), "impersonated_org": impersonated, "evidence_count": len(evidence), "connected_evidence": connected, "indicators": indicators, "entity_counts": counts, "narrative": narrative}

@@ -29,3 +29,12 @@ def test_safe_demo_is_low_risk():
         assert output["analysis"]["risk"] == "LOW"
         assert output["analysis"]["risk_score"] == 0
         assert output["analysis"]["scam_type"] == "No scam indicators detected"
+
+
+def test_high_risk_domain_list_is_checked():
+    with TestClient(app) as client:
+        response = client.post("/upload", data={"pasted_text": "Review https://alchemygp.vip/login before investing."})
+        assert response.status_code == 200
+        output = client.post("/analyze").json()
+        assert output["analysis"]["scam_type"] == "Known high-risk domain"
+        assert any(item["label"] == "Domain on high-risk domain list" for item in output["analysis"]["indicators"])

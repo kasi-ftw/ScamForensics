@@ -36,6 +36,10 @@ def evidence_with_entities():
 def add_evidence(filename: str, text: str, manual_timestamp: str | None = None, case_id: str = "CASE-DEMO"):
     kind = infer_kind(filename, text)
     extracted = extract_entities(text)
+    for domain in db.high_risk_domain_matches(text):
+        if ("url", domain) not in extracted:
+            extracted.append(("url", domain))
+        extracted.append(("high_risk_domain", domain))
     timestamp = manual_timestamp or next((value for typ, value in extracted if typ == "timestamp"), None)
     source = "manual" if manual_timestamp else ("extracted" if timestamp else None)
     with db.connect() as conn:
