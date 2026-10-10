@@ -15,6 +15,7 @@ export default function EvidenceDetailModal({ evidence, onClose }) {
         <div><dt>Time</dt><dd>{evidence.timestamp || 'Not set'}</dd></div>
         <div><dt>Source</dt><dd>{evidence.ts_source || 'Uploaded'}</dd></div>
       </dl>
+      {evidence.image_url && <section className="evidence-image"><h3>Uploaded image</h3><img src={evidence.image_url} alt={`Uploaded evidence: ${evidence.filename}`} /></section>}
       <section className="evidence-text"><h3>Extracted text</h3><pre>{evidence.raw_text || 'No readable text was extracted from this file.'}</pre></section>
       <section className="evidence-entities"><h3>Detected identifiers</h3>{entities.length ? <div>{entities.map(entity => <span key={entity.id}>{entity.type}: {entity.value}</span>)}</div> : <p>No identifiers detected.</p>}</section>
     </section>

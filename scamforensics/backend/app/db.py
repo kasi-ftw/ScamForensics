@@ -32,6 +32,7 @@ def init_db():
               filename TEXT NOT NULL,
               kind TEXT NOT NULL,
               raw_text TEXT NOT NULL,
+              file_path TEXT,
               timestamp TEXT,
               ts_source TEXT,
               created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -55,6 +56,9 @@ def init_db():
             "INSERT OR IGNORE INTO high_risk_domains(domain, source) VALUES (?, ?)",
             [(domain, "Cybertrace 2026 list (user-provided)") for domain in CYBERTRACE_2026_HIGH_RISK_DOMAINS],
         )
+        evidence_columns = {item[1] for item in conn.execute("PRAGMA table_info(evidence)")}
+        if "file_path" not in evidence_columns:
+            conn.execute("ALTER TABLE evidence ADD COLUMN file_path TEXT")
 
 
 def rows(sql, params=()):
